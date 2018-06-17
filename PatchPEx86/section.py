@@ -34,7 +34,7 @@ class SectionParser:
             sec = Section()
             idx = 0x28 * n
             sec._name = Value(section[idx:idx + 8], offset + 0xf8 + idx, 8)
-            sec._vsize = Value(u32(section[idx + 8:idx + 12]), offset + 0xf8, + idx + 8, 4)
+            sec._vsize = Value(u32(section[idx + 8:idx + 12]), offset + 0xf8 + idx + 8, 4)
             sec._vaddr = Value(u32(section[idx + 12:idx + 16]), offset + 0xf8 + idx + 12, 4)
             sec._sord = Value(u32(section[idx + 16:idx + 20]), offset + 0xf8 + idx + 16, 4)
             sec._ptrd = Value(u32(section[idx + 20:idx + 24]), offset + 0xf8 + idx + 20, 4)

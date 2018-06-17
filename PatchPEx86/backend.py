@@ -3,6 +3,7 @@ from disasm import *
 from error import *
 from collections import OrderedDict
 
+
 class PatchPEx86:
     def __init__(self, input_file, output_file='./result.exe'):
         self.input_file = input_file
@@ -32,7 +33,7 @@ class PatchPEx86:
     def _parsing(self):
         if self.binary[:2] == 'MZ':
             self.offset = u32(self.binary[0x3c:][:4])
-            if self.binary[self.offset:self.offset + 2)] == 'PE':
+            if self.binary[self.offset:self.offset + 2] == 'PE':
                 self.base = u32(self.binary[self.offset + 0x34:][:4])
                 self.section = self.parser.get_section(self.base, self.binary, self.offset)
                 self.text = self.parser.find_section('text')
@@ -77,7 +78,7 @@ class PatchPEx86:
     def _patch_directory(self):
         # modify data_directories
         nDirectories = u32(self.binary[self.offset + 0x74:][:4])
-        for i in range(nDirectories)
+        for i in range(nDirectories):
             rva = u32(self.binary[self.offset + 0x78 + i*8:][:4])
             t_size = u32(self.binary[self.offset + 0x78 + i*8 + 4:][:8])
             self.directories.append([rva, t_size])
@@ -118,10 +119,10 @@ class PatchPEx86:
 
             idx = 0
             while idx < idata_size:
-                addr = u32(self.binary[idata.ptrd + i:][:4])
+                addr = u32(self.binary[idata.ptrd + idx:][:4])
                 if addr != 0:
-                    self._insert(idata.ptrd + i, p32(addr + self.size))
-                i += 4
+                    self._insert(idata.ptrd + idx, p32(addr + self.size))
+                idx += 4
 
             import_offset = self._rva2raw(self.directories[1][0])
             import_size = self.directories[1][1]
@@ -198,7 +199,7 @@ class PatchPEx86:
                 reloc_table[rva].append(0)
             t_size = len(reloc_table[rva])*2 + 8
 
-            self._insert(reloc.ptrd + reloc_size, p32(size))
+            self._insert(reloc.ptrd + reloc_size, p32(rva))
             self._insert(reloc.ptrd + reloc_size + 4, p32(t_size))
 
             for idx, offset in enumerate(range(8, t_size, 2)):
@@ -214,7 +215,7 @@ class PatchPEx86:
 
         for rva in reloc_table:
             for offset in reloc_table[rva]:
-                if rva >= self.text.vaddr and self.text.vaddr + self.text.vsize >= rva:
+                if self.text.vaddr <= rva <= self.text.vaddr + self.text.vsize:
                     if offset == 0:
                         if rva in new_reloc_table:
                             new_reloc_table[rva].append(0)
@@ -331,7 +332,6 @@ class PatchPEx86:
             offset = rva - section.vaddr
             return section.ptrd + offset
         raise SectionError(hex(self.base + rva))
-
 
     def apply_patch(self):
         pass
