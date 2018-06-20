@@ -26,6 +26,3 @@ def u64(x):
 
 def map32(x):
     return x & 0xfffff000
-
-def map64(x):
-    return x & 0xfffffffffffff000
