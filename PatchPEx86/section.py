@@ -1,5 +1,9 @@
 from utils import *
 
+X = 0x20000000
+R = 0x40000000
+W = 0x80000000
+
 class Section:
     def __init__(self):
         pass

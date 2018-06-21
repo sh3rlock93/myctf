@@ -2,15 +2,27 @@ from section import *
 from patch import *
 from disasm import *
 from error import *
+
 from collections import OrderedDict
+from collections import defaultdict
+import re
+
+regexp = re.compile(r'{[0-9|a-z|A-Z|_|+]}')
 
 class PatchPEx86:
-    def __init__(self, input_file, output_file='./result.exe'):
+    def __init__(self, input_file):
         self.input_file = input_file
-        self.output_file = output_file
         self.binary = open(self.input_file, 'rb').read()
         self.patched_binary = self.binary
 
+        self._initialize()
+
+        self._parsing()
+        self._preprocessing()
+        self._patch_section(isPreprocessing=True)
+        self.remain_size = self.size - self.added_inst_size
+
+    def _initialize(self):
         self.parser = SectionParser()
         self.insn_address = OrderedDict()
         self.new_insn_address = OrderedDict()
@@ -25,8 +37,6 @@ class PatchPEx86:
         self.asm = None
         self.size = 0
         self.added_inst_size = 0
-
-        self._parsing()
 
     def _insert(self, offset, data):
         self.patched_binary = self.patched_binary[:offset] + data + self.patched_binary[offset + len(data):]
@@ -47,17 +57,15 @@ class PatchPEx86:
         else:
             raise FileError(self.input_file)
 
+    def _patch_section(self, isPreprocessing=False, size=0):
+        if size:
+            self.size = size
 
-    def _save_file(self):
-        open(self.output_file, 'wb').write(self.patched_binary)
-
-    def _patch_section(self):
         size_of_code = u32(self.binary[self.offset + 0x1c:][:4])
         size_of_image = u32(self.binary[self.offset + 0x50:][:4])
 
         self._insert(self.offset + 0x1c, p32(size_of_code + self.size))
         self._insert(self.offset + 0x50, p32(size_of_image + self.size))
-        self._insert(self.text._character.offset, p32(self.text.character | 0x60000000))
 
         for section in self.section:
             if self.text.idx < section.idx:
@@ -69,9 +77,9 @@ class PatchPEx86:
         self._patch_idata()
         self._patch_rsrc()
 
-        # TODO implement function for patching text section
-        self._patch_text()
-        self._patch_reloc()
+        self._patch_text(isPreprocessing)
+        if isPreprocessing:
+            self._patch_reloc()
 
         entrypoint = u32(self.binary[self.offset + 0x28:][:4])
         self._insert(self.offset + 0x28, p32(self.insn_address[self.base + entrypoint] - self.base))
@@ -206,6 +214,8 @@ class PatchPEx86:
             for idx, offset in enumerate(range(8, t_size, 2)):
                 self._insert(reloc.ptrd + reloc_size + offset, p16(reloc_table[rva][idx]))
             reloc_size += t_size
+
+        self._insert(self.offset + 0x78 + 5*8 + 4, p32(reloc_size))
         return True
 
     def _patch_reloc(self):
@@ -217,15 +227,15 @@ class PatchPEx86:
         for rva in reloc_table:
             for offset in reloc_table[rva]:
                 if self.text.vaddr <= rva <= self.text.vaddr + self.text.vsize:
-                    if offset == 0:
-                        if rva in new_reloc_table:
-                            new_reloc_table[rva].append(0)
-                        else:
-                            new_reloc_table[rva] = []
-                            new_reloc_table[rva].append(0)
-                        continue
-                    new_offset = self._get_reloc_offset(rva + offset - 0x3000)
+                    new_offset = self._get_reloc_offset(rva + (offset & 0xfff))
                     new_rva = map32(new_offset + self.text.vaddr)
+                    if offset == 0:
+                        if new_rva in new_reloc_table:
+                            new_reloc_table[new_rva].append(0)
+                        else:
+                            new_reloc_table[new_rva] = []
+                            new_reloc_table[new_rva].append(0)
+                        continue
                     if new_rva in new_reloc_table:
                         new_reloc_table[new_rva].append((new_offset & 0xfff) + 0x3000)
                     else:
@@ -238,32 +248,34 @@ class PatchPEx86:
                         self._insert(self.text.ptrd + new_offset, p32(reloc_addr + self.size))
                 else:
                     new_rva = rva + self.size
+                    new_offset = offset & 0xfff
                     if offset == 0:
-                        if rva in new_reloc_table:
-                            new_reloc_table[rva].append(0)
+                        if new_rva in new_reloc_table:
+                            new_reloc_table[new_rva].append(0)
                         else:
-                            new_reloc_table[rva] = []
-                            new_reloc_table[rva].append(0)
+                            new_reloc_table[new_rva] = []
+                            new_reloc_table[new_rva].append(0)
                         continue
-                    offset -= 0x3000
                     if new_rva in new_reloc_table:
-                        new_reloc_table[new_rva].append((new_offset & 0xfff) + 0x3000)
+                        new_reloc_table[new_rva].append(new_offset + 0x3000)
                     else:
                         new_reloc_table[new_rva] = []
-                        new_reloc_table[new_rva].append((new_offset & 0xfff) + 0x3000)
+                        new_reloc_table[new_rva].append(new_offset + 0x3000)
                     section = self.parser.find_section(self.base + new_rva)
                     if section and section.name != '.text':
-                        reloc_addr = u32(self.patched_binary[section.ptrd + new_rva + offset - section.vaddr:][:4])
+                        reloc_addr = u32(self.patched_binary[section.ptrd + new_rva + new_offset - section.vaddr:][:4])
                         if reloc_addr in self.insn_address:
-                            self._insert(section.ptrd + new_rva + offset - section.vaddr, p32(self.insn_address[reloc_addr]))
+                            self._insert(section.ptrd + new_rva + new_offset - section.vaddr, p32(self.insn_address[reloc_addr]))
                         else:
-                            self._insert(section.ptrd + new_rva + offset - section.vaddr, p32(reloc_addr + self.size))
+                            self._insert(section.ptrd + new_rva + new_offset - section.vaddr, p32(reloc_addr + self.size))
         self._set_reloc(new_reloc_table)
         return True
 
-    def _patch_text(self):
-        # TODO
-        self._patch_asm()
+    def _patch_text(self, isPreprocessing=False):
+        if isPreprocessing:
+            self._patch_jmp()
+        else:
+            self.added_inst_size = 0
 
         self._insert(self.text._vsize.offset, p32(self.text.vsize + self.size))
         self._insert(self.text._sord.offset, p32(self.text.sord + self.size))
@@ -273,18 +285,8 @@ class PatchPEx86:
             self.patched_binary[self.text.ptrd + self.text.sord + self.added_inst_size:]
 
     def _preprocessing(self):
-        self.added_inst_size = 0
         for asm in self.asm:
-            if asm.address in self.patches:
-                if self.patches[asm.address].pos == 'forward':
-                    self.added_inst_size += len(self.patches[asm.address].code)
-                    self.insn_address[asm.address] = asm.address + self.added_inst_size
-                elif self.patches[asm.address].pos == 'backward':
-                    self.insn_address[asm.address] = asm.address + self.added_inst_size
-                    self.added_inst_size += len(self.patches[asm.address].code)
-            else:
-                self.insn_address[asm.address] = asm.address + self.added_inst_size
-
+            self.insn_address[asm.address] = asm.address + self.added_inst_size
             if asm.mnemonic in jmp_list and self.base + self.text.vaddr <= asm.operands[0].value.imm <= self.base + self.text.vaddr + self.text.vsize:
                 opcode = asm.bytes[:1]
                 if opcode != '\xf2':
@@ -299,61 +301,103 @@ class PatchPEx86:
                         self.added_inst_size += 7 - asm.size
         self.size = map32(self.added_inst_size) + 0x1000
 
-    def _patch_asm(self):
+    #TODO implementing relocation in user patches
+    def _patch_preprocessing(self, patches):
+        for asm in self.asm:
+            if asm.address in self.patches:
+                for patch in self.patches[asm.address]:
+                    if patch.pos == 'forward':
+                        patch.addr = asm.address + self.added_inst_size
+                        self.added_inst_size += len(patch.code)
+                        self.insn_address[asm.address] = asm.address + self.added_inst_size
+                    elif patch.pos == 'backward':
+                        self.insn_address[asm.address] = asm.address + self.added_inst_size
+                        patch.addr = asm.address + self.added_inst_size
+                        self.added_inst_size += len(patch.code)
+                    patch.base = patch.addr
+                    added_code = ''
+                    for code in re.split(r'\n|;', patch.asm_code):
+                        if re.search(regexp, c):
+                            symbol = re.findall(regexp,c)[0]
+                            for p in patches:
+                                if p.name == symbol[1:-1]:
+                                    c = c.replace(symbol, '0x%x' % p.addr)
+                                    break
+                        added_code += asm(c, arch='x86', vma=(patch.base + len(added_code)))
+            else:
+                self.insn_address[asm.address] = asm.address + self.added_inst_size
+
+    def _patch_jmp(self):
         self.added_inst_size = 0
         raw_offset = self.base + self.text.vaddr - self.text.ptrd
         for asm in self.asm:
             inst_offset = asm.address - raw_offset + self.added_inst_size
             opcode = self.patched_binary[inst_offset:][:1]
-            size = asm.size
             if asm.mnemonic in jmp_list and self.base + self.text.vaddr <= asm.operands[0].value.imm <= self.base + self.text.vaddr + self.text.vsize:
                 offset = self.insn_address[asm.operands[0].value.imm] - self.insn_address[asm.address]
                 if opcode != '\xf2':
                     if asm.mnemonic == 'call':
                         offset -= 5
-                        self.patched_binary = self.patched_binary[:inst_offset] + '\xe8' + p32(offset & 0xffffffff) + \
+                        self.patched_binary = self.patched_binary[:inst_offset] + '\xe8' + p32(offset) + \
                             self.patched_binary[inst_offset + asm.size:]
                         self.added_inst_size += 5 - asm.size
-                        size = 5
                     elif asm.mnemonic == 'jmp':
                         offset -= 5
-                        self.patched_binary = self.patched_binary[:inst_offset] + '\xe9' + p32(offset & 0xffffffff) + \
+                        self.patched_binary = self.patched_binary[:inst_offset] + '\xe9' + p32(offset) + \
                             self.patched_binary[inst_offset + asm.size:]
                         self.added_inst_size += 5 - asm.size
-                        size = 5
                     else:
                         offset -= 6
-                        self.patched_binary = self.patched_binary[:inst_offset] + '\x0f' + p8((u8(opcode) | 0x80) & 0x8f) + p32(offset & 0xffffffff) + \
+                        self.patched_binary = self.patched_binary[:inst_offset] + '\x0f' + p8((u8(opcode) | 0x80) & 0x8f) + p32(offset) + \
                             self.patched_binary[inst_offset + asm.size:]
                         self.added_inst_size += 6 - asm.size
-                        size = 6
                 else:
                     if asm.mnemonic == 'call':
                         offset -= 6
-                        self.patched_binary = self.patched_binary[:inst_offset + 1] + '\xe8' + p32(offset & 0xffffffff) + \
+                        self.patched_binary = self.patched_binary[:inst_offset + 1] + '\xe8' + p32(offset) + \
                             self.patched_binary[inst_offset + asm.size:]
                         self.added_inst_size += 6 - asm.size
-                        size = 6
                     elif asm.mnemonic == 'jmp':
                         offset -= 6
-                        self.patched_binary = self.patched_binary[:inst_offset + 1] + '\xe9' + p32(offset & 0xffffffff) + \
+                        self.patched_binary = self.patched_binary[:inst_offset + 1] + '\xe9' + p32(offset) + \
                             self.patched_binary[inst_offset + asm.size:]
                         self.added_inst_size += 6 - asm.size
-                        size = 6
                     else:
                         offset -= 7
-                        self.patched_binary = self.patched_binary[:inst_offset + 1] + '\x0f' + p8((u8(opcode) | 0x80) & 0x8f) + p32(offset & 0xffffffff) + \
+                        self.patched_binary = self.patched_binary[:inst_offset + 1] + '\x0f' + p8((u8(opcode) | 0x80) & 0x8f) + p32(offset) + \
                             self.patched_binary[inst_offset + asm.size:]
                         self.added_inst_size += 7 - asm.size
-                        size = 7
+
+    def _patch_code(self):
+        self.added_inst_size = 0
+        raw_offset = self.base + self.text.vaddr - self.text.ptrd
+        for asm in self.asm:
+            inst_offset = asm.address - raw_offset + self.added_inst_size
+            opcode = self.patched_binary[inst_offset:][:1]
+            if asm.mnemonic in jmp_list and self.base + self.text.vaddr <= asm.operands[0].value.imm <= self.base + self.text.vaddr + self.text.vsize:
+                offset = self.insn_address[asm.operands[0].value.imm] - self.insn_address[asm.address] - asm.size
+                if opcode != '\xf2':
+                    if asm.mnemonic == 'call' or asm.mnemonic == 'jmp':
+                        self.patched_binary = self.patched_binary[:inst_offset + 1] + p32(offset) + self.patched_binary[inst_offset + asm.size:]
+                    else:
+                        self.patched_binary = self.patched_binary[:inst_offset + 2] + p32(offset) + self.patched_binary[inst_offset + asm.size:]
+                else:
+                    if asm.mnemonic == 'call' or asm.mnemonic == 'jmp':
+                        self.patched_binary = self.patched_binary[:inst_offset + 2] + p32(offset) + self.patched_binary[inst_offset + asm.size:]
+                    else:
+                        self.patched_binary = self.patched_binary[:inst_offset + 3] + p32(offset) + self.patched_binary[inst_offset + asm.size:]
 
             if asm.address in self.patches:
-                code = self.patches[asm.address].code
-                self.added_inst_size += len(code)
-                if self.patches[asm.address].pos == 'forward':
-                    self.patched_binary = self.patched_binary[:inst_offset] + code + self.patched_binary[inst_offset:]
-                elif self.patches[asm.address].pos == 'backward':
-                    self.patched_binary = self.patched_binary[:inst_offset + size] + code + self.patched_binary[inst_offset + size:]
+                for patch in self.patches[asm.address]:
+                    code = patch.code
+                    self.added_inst_size += len(code)
+                    if patch.pos == 'forward':
+                        self.patched_binary = self.patched_binary[:inst_offset] + code + self.patched_binary[inst_offset:]
+                    elif patch.pos == 'backward':
+                        self.patched_binary = self.patched_binary[:inst_offset + asm.size] + code + self.patched_binary[inst_offset + asm.size:]
+
+        self.patched_binary = self.patched_binary[:self.text.ptrd + self.text.sord + self.size - self.added_inst_size] + self.patched_binary[self.text.ptrd + self.text.sord + self.size:]
+        self._patch_reloc()
 
     def _get_reloc_offset(self, offset):
         offset = self.base + offset
@@ -369,11 +413,64 @@ class PatchPEx86:
             return section.ptrd + offset
         raise SectionError(hex(self.base + rva))
 
-    def apply_patches(self, patches):
-        for patch in patches:
-            if isinstance(patch, InsertCodePatch):
-                self.patches[patch.addr] = patch
+    def _add_section(self, patch):
+        last_section = self.parser.section[-1]
+        nSection = len(self.parser.section)
+        if last_section.vsize % 0x1000:
+            vaddr = last_section.vaddr + ((last_section.vsize & 0xfffff000) + 0x1000)
+        else:
+            vaddr = last_section.vaddr + last_section.vsize
+        ptrd = last_section.ptrd + ((last_section.sord & 0xffffff00) + 0x200)
 
-        self._preprocessing()
-        self._patch_section()
-        self._save_file()
+        self._insert(self.offset + 6, p16(nSection + 1))
+        self._insert(last_section._name.offset + 0x28, patch.section_name)
+        self._insert(last_section._vsize.offset + 0x28, p32(patch.len))
+        self._insert(last_section._vaddr.offset + 0x28, p32(vaddr))
+        self._insert(last_section._sord.offset + 0x28, p32(patch.len))
+        self._insert(last_section._ptrd.offset + 0x28, p32(ptrd))
+        self._insert(last_section._ptrc.offset + 0x28, p32(0))
+        self._insert(last_section._ptln.offset + 0x28, p32(0))
+        self._insert(last_section._norc.offset + 0x28, p16(0))
+        self._insert(last_section._noln.offset + 0x28, p16(0))
+
+        self._insert(last_section._character.offset + 0x28, p32(eval(patch.mode) | 0x40))
+
+        self.patched_binary = self.patched_binary.ljust(ptrd, '\x00') + '\x00' * patch.len
+        self._insert(self.offset + 0x50, p32(vaddr + patch.len))
+        self.parser.get_section(self.base, self.patched_binary, self.offset)
+
+        return self.base + vaddr
+
+    def save(self, output_file=None):
+        if output_file is None:
+            output_file = '%s_patched' % self.input_file
+        open(output_file, 'wb').write(self.patched_binary)
+
+    def apply_patches(self, patches):
+        self._initialize()
+        self.binary = self.patched_binary
+        self._parsing()
+
+        for patch in patches:
+            if isinstance(patch, AddSectionPatch):
+                patch.addr = self._add_section(patch)
+
+        insert_code_patches = [p for p in patches if isinstance(p, InsertCodePatch)]
+        insert_code_patches_dict = defaultdict(list)
+        for p in insert_code_patches:
+            insert_code_patches_dict[p.addr].append(p)
+        insert_code_patches_dict_sorted = defaultdict(list)
+        for k, v in insert_code_patches_dict.iteritems():
+            insert_code_patches_dict_sorted[k] = sorted(v, key=lambda x: 1*x.priority) # TODO
+
+        for addr, patch in insert_code_patches_dict_sorted.iteritems():
+            self.patches[addr] = patch
+
+        self._patch_preprocessing(patches)
+
+        if self.added_inst_size > self.remain_size:
+            self.size = map32(self.added_inst_size) + 0x1000
+            self.remain_size += self.size - self.added_inst_size
+            self._patch_section()
+
+        self._patch_code()

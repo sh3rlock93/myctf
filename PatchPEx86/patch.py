@@ -8,12 +8,27 @@ class CodePatch(Patch):
     def __init__(self, name, code):
         super(CodePatch, self).__init__(name)
 
-        self.code = code
-        self.asm_code = asm(code, arch='x86')
+        self.base = 0
+        self.asm_code = code
+
+    @property
+    def code(self):
+        return asm(code, arch='x86', vma=self.base)
 
 class InsertCodePatch(CodePatch):
-    def __init__(self, name, addr, code, pos='backward'):
+    def __init__(self, addr, code, pos='backward', name=None, priority=1):
         super(InsertCodePatch, self).__init__(name, code)
 
         self.addr = addr
         self.pos = pos
+        self.priority = priority
+
+class AddSectionPatch(Patch):
+    def __init__(self, section_name, tlen, mode, name=None):
+        super(AddSectionPatch, self).__init__(name)
+        assert type(tlen) == int
+
+        self.len = tlen
+        self.mode = mode.upper()
+        self.section_name = section_name
+        self.addr = 0
