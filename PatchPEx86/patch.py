@@ -13,7 +13,7 @@ class CodePatch(Patch):
 
     @property
     def code(self):
-        return asm(code, arch='x86', vma=self.base)
+        return asm(self.asm_code, arch='x86', vma=self.base)
 
 class InsertCodePatch(CodePatch):
     def __init__(self, addr, code, pos='backward', name=None, priority=1):

@@ -317,13 +317,13 @@ class PatchPEx86:
                     patch.base = patch.addr
                     added_code = ''
                     for code in re.split(r'\n|;', patch.asm_code):
-                        if re.search(regexp, c):
-                            symbol = re.findall(regexp,c)[0]
+                        if re.search(regexp, code):
+                            symbol = re.findall(regexp, code)[0]
                             for p in patches:
                                 if p.name == symbol[1:-1]:
-                                    c = c.replace(symbol, '0x%x' % p.addr)
+                                    code = code.replace(symbol, '0x%x' % p.addr)
                                     break
-                        added_code += asm(c, arch='x86', vma=(patch.base + len(added_code)))
+                        added_code += asm(code, arch='x86', vma=(patch.base + len(added_code)))
             else:
                 self.insn_address[asm.address] = asm.address + self.added_inst_size
 
