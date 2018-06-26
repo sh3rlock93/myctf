@@ -1,8 +1,12 @@
 from utils import *
 
-X = 0x20000000
-R = 0x40000000
-W = 0x80000000
+EXECUTE = 0x20000000
+READ = 0x40000000
+WRITE = 0x80000000
+
+CODE = 0x20
+INIT_DATA = 0x40
+UNINIT_DATA = 0x80
 
 class Section:
     def __init__(self):
