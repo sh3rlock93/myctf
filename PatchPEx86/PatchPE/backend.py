@@ -42,7 +42,7 @@ class Backend(object):
             if self.binary[self.offset:self.offset + 2] == 'PE':
                 self.base = u32(self.binary[self.offset + 0x34:][:4])
                 self.section = self.parser.get_section(self.base, self.binary, self.offset)
-                self.entrypoint = u32(self.binary[self.offset + 0x28:][:4]
+                self.entrypoint = u32(self.binary[self.offset + 0x28:][:4])
             else:
                 raise FileError(self.input_file)
         else:
@@ -148,7 +148,7 @@ class Backend(object):
         return self.base + vaddr
 
     def pop_section(self):
-
+        pass
 
     def save(self, output_file=None):
         if output_file is None:
