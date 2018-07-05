@@ -13,6 +13,22 @@ class ReassemblerBackend(Backend):
         self._clearing()
         self.remain_size = self.size - self.added_inst_size
 
+    def _parsing(self):
+        if self.binary[:2] == 'MZ':
+            self.offset = u32(self.binary[0x3c:][:4])
+            if self.binary[self.offset:self.offset + 2] == 'PE':
+                self.base = u32(self.binary[self.offset + 0x34:][:4])
+                self.section = self.parser.get_section(self.base, self.binary, self.offset)
+                self.text = self.parser.find_section('text')
+                if self.text is None:
+                    raise SectionError('text')
+                self.asm = disassembler.disasm(self.binary[self.text.ptrd:self.text.ptrd + \
+                    self.text.sord], self.base + self.text.vaddr)
+            else:
+                raise FileError(self.input_file)
+        else:
+            raise FileError(self.input_file)
+
     def _clearing(self):
         self.binary = self.patched_binary
         self._initialize()

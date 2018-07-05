@@ -28,6 +28,7 @@ class Backend(object):
         self.text = None
         self.offset = None
         self.base = None
+        self.entrypoint = None
         self.asm = None
         self.size = 0
         self.added_inst_size = 0
@@ -41,11 +42,7 @@ class Backend(object):
             if self.binary[self.offset:self.offset + 2] == 'PE':
                 self.base = u32(self.binary[self.offset + 0x34:][:4])
                 self.section = self.parser.get_section(self.base, self.binary, self.offset)
-                self.text = self.parser.find_section('text')
-                if self.text is None:
-                    raise SectionError('text')
-                self.asm = disassembler.disasm(self.binary[self.text.ptrd:self.text.ptrd + \
-                    self.text.sord], self.base + self.text.vaddr)
+                self.entrypoint = u32(self.binary[self.offset + 0x28:][:4]
             else:
                 raise FileError(self.input_file)
         else:
@@ -71,12 +68,9 @@ class Backend(object):
 
     def _set_reloc(self, reloc_table):
         reloc = self.parser.find_section('reloc')
-        text = self.parser.find_section('text')
         reloc_size = 0
 
         for rva in reloc_table:
-            if rva != text.vaddr and reloc_table[rva][-1] != 0:
-                reloc_table[rva].append(0)
             t_size = len(reloc_table[rva])*2 + 8
 
             self._insert(reloc.ptrd + reloc_size, p32(rva))
@@ -104,7 +98,7 @@ class Backend(object):
                 if offset < old_offset and not isinserted:
                     new_offset_list.append(offset)
                     isinserted = True
-                elif old_offset = 0:
+                elif old_offset == 0:
                     new_offset_list.append(offset)
                     isinserted = True
                 new_offset_list.append(old_offset)
@@ -152,6 +146,9 @@ class Backend(object):
         self._clearing()
 
         return self.base + vaddr
+
+    def pop_section(self):
+
 
     def save(self, output_file=None):
         if output_file is None:
