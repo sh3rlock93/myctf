@@ -1,4 +1,4 @@
 <?php
 echo "hi\n";
-print hi:
+print hi;
 ?>
