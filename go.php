@@ -1,1 +1,1 @@
-/etc/passwd
+test.php
