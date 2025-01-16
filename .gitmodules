@@ -1,0 +1,30 @@
+[submodule ".oh-my-zsh"]
+	path = .oh-my-zsh
+	url = https://github.com/ohmyzsh/ohmyzsh
+[submodule ".vim/bundle/Vundle.vim"]
+	path = .vim/bundle/Vundle.vim
+	url = https://github.com/VundleVim/Vundle.vim
+[submodule ".vim/bundle/indentLine"]
+	path = .vim/bundle/indentLine
+	url = https://github.com/Yggdroot/indentLine
+[submodule ".vim/bundle/nerdtree-git-plugin"]
+	path = .vim/bundle/nerdtree-git-plugin
+	url = https://github.com/Xuyuanp/nerdtree-git-plugin
+[submodule ".vim/bundle/nerdtree"]
+	path = .vim/bundle/nerdtree
+	url = https://github.com/preservim/nerdtree
+[submodule ".vim/bundle/tagbar"]
+	path = .vim/bundle/tagbar
+	url = https://github.com/preservim/tagbar
+[submodule ".vim/bundle/vim-airline-themes"]
+	path = .vim/bundle/vim-airline-themes
+	url = https://github.com/vim-airline/vim-airline-themes
+[submodule ".vim/bundle/vim-airline"]
+	path = .vim/bundle/vim-airline
+	url = https://github.com/vim-airline/vim-airline
+[submodule ".vim/bundle/vim-devicons"]
+	path = .vim/bundle/vim-devicons
+	url = https://github.com/ryanoasis/vim-devicons
+[submodule ".vim/bundle/vim-nerdtree-syntax-highlight"]
+	path = .vim/bundle/vim-nerdtree-syntax-highlight
+	url = https://github.com/tiagofumo/vim-nerdtree-syntax-highlight
