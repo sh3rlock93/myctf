@@ -110,12 +110,6 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 #
-export HTTP_PROXY=http://168.219.61.252:8080
-export http_proxy=http://168.219.61.252:8080
-export HTTPS_PROXY=http://168.219.61.252:8080
-export https_proxy=http://168.219.61.252:8080
-export SSL_CERT_FILE=/home/shared/Digitalcity.crt
-export no_proxy="127.0.0.1.localhost"
 export ANDROID_NDK_ROOT=/usr/local/share/android-ndk-r25c
 export PATH=$PATH:$ANDROID_NDK_ROOT
 
