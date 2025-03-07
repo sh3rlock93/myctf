@@ -1,0 +1,187 @@
+<TABLE style="border-collapse:collapse;" class="cui-div">
+    <COLGROUP><COL/></COLGROUP>
+    <TBODY>
+        <TR>
+            <TD class="cui-div-cell" style="width:800px;box-sizing:border-box;border-radius:8px;border:solid 1px rgba(0, 0, 0, 0.14);margin-left:auto;margin-bottom:0;margin-right:auto;margin-top:0;">
+                <!--conferenceInformationHtml-->
+                <!--videoConferenceCallInInformationHtml-->
+                <!--agendaHtml-->
+                <!--dialInHtml-->
+                <!--connectableDeviceHtml-->
+                <!--meetingMinutesHtmlBuilder-->
+                <!--cautionHtml-->
+                <TABLE style="border-collapse:collapse;" class="cui-div">
+                    <COLGROUP><COL/></COLGROUP>
+                    <TBODY>
+                        <TR>
+                            <TD class="cui-div-cell" style="border:0px none rgb(0, 0, 0);padding-left:32px;padding-bottom:0px;padding-right:32px;padding-top:32px;">
+                                <!--guideMessage-->
+                                <!--enterButtonHtml-->
+                                <TABLE style="border-collapse:collapse;" class="cui-div">
+                                    <COLGROUP><COL/></COLGROUP>
+                                    <TBODY>
+                                        <TR>
+                                            <TD style="border:0px none rgb(0, 0, 0);" class="cui-div-cell">
+                                                <TABLE style="border-collapse:collapse;" class="cui-div">
+                                                    <COLGROUP><COL/></COLGROUP>
+                                                    <TBODY>
+                                                        <TR>
+                                                            <TD class="cui-div-cell" style="position:relative;margin-bottom:8px;border:0px none rgb(0, 0, 0);">
+                                                                <P style="line-height:25px;margin-left:0;margin-bottom:0;margin-right:0;margin-top:0;">회의가 시작되었습니다. Knox Meeting에 입장해 주세요. <A style="color:#2a82f0;text-decoration:underline;margin-left:8px;" target="_blank" href="https://meeting.samsung.net/@/conference/read/9340676">회의 상세 보기</A></P>
+                                                                <P style="line-height:25px;margin-left:0;margin-bottom:0;margin-right:0;margin-top:0;"><SPAN style="font-weight:bold;">회의 번호 : </SPAN>9340676 <SPAN style="font-weight:bold;">비밀번호 : </SPAN>123456</P>
+                                                            </TD>
+                                                        </TR>
+                                                    </TBODY>
+                                                </TABLE>
+                                                <TABLE style="border-collapse:collapse;" class="cui-div">
+                                                    <COLGROUP><COL/></COLGROUP>
+                                                    <TBODY>
+                                                        <TR>
+                                                            <TD class="cui-div-cell" style="position:relative;margin-bottom:8px;border:0px none rgb(0, 0, 0);">
+                                                                <P style="line-height:25px;margin-left:0;margin-bottom:0;margin-right:0;margin-top:0;">The meeting has started. Please join Knox Meeting. <A style="color:#2a82f0;text-decoration:underline;margin-left:8px;" target="_blank" href="https://meeting.samsung.net/@/conference/read/9340676">View meeting details</A></P>
+                                                                <P style="line-height:25px;margin-left:0;margin-bottom:0;margin-right:0;margin-top:0;"><SPAN style="font-weight:bold;">Meeting Number : </SPAN>9340676 <SPAN style="font-weight:bold;">Password : </SPAN>123456</P>
+                                                            </TD>
+                                                        </TR>
+                                                    </TBODY>
+                                                </TABLE>
+                                                <P style="margin-top:20px;"><A style="display:inline-block;border-radius:6px;margin-right:8px;height:36px;font-size:14px;background-color:#2a82f0;border:1px solid #2a82f0;color:#fff;line-height:36px;text-decoration:none;padding-left:16px;padding-bottom:0;padding-right:16px;padding-top:0;" target="_blank" href="https://meeting.samsung.net/@/j/9340676">
+    회의 입장 • Join
+</A><A style="display:inline-block;border-radius:6px;margin-right:8px;height:36px;font-size:14px;background-color:#fff;border:1px solid #ccc;color:rgba(0, 0, 0, 0.9);line-height:36px;text-decoration:none;padding-left:16px;padding-bottom:0;padding-right:16px;padding-top:0;" target="_blank" href="https://meeting.samsung.net/#/ma/9340676">
+        모바일 오디오 • Mobile Audio
+</A></P>
+                                            </TD>
+                                        </TR>
+                                    </TBODY>
+                                </TABLE>
+                                <TABLE style="border-collapse:collapse;" class="cui-div">
+                                    <COLGROUP><COL/></COLGROUP>
+                                    <TBODY>
+                                        <TR>
+                                            <TD class="cui-div-cell" style="background-color:rgb(219, 219, 219);height:1px;border:0px none rgb(0, 0, 0);margin-left:0px;margin-bottom:32px;margin-right:0px;margin-top:32px;">
+                                            </TD>
+                                        </TR>
+                                    </TBODY>
+                                </TABLE>
+                                <H2 style="font-size:16px;color:rgba(0, 0, 0, 0.9);margin-left:0;margin-bottom:20px;margin-right:0px;margin-top:0px;padding-left:0px;padding-bottom:0px;padding-right:0px;padding-top:0px;">회의 안건 • Agenda</H2>
+                                <TABLE style="border-collapse:collapse;" class="cui-div">
+                                    <COLGROUP><COL/></COLGROUP>
+                                    <TBODY>
+                                        <TR>
+                                            <TD class="cui-div-cell" style="line-height:21px;border:0px none rgb(0, 0, 0);">
+                                                <P><SPAN style="white-space:pre-wrap;">□ 내&nbsp; 용</SPAN></P>
+                                                <P><SPAN style="white-space:pre-wrap;">&nbsp; &nbsp;  - People팀 주요 소식(전입 등)</SPAN></P>
+                                                <P><SPAN style="white-space:pre-wrap;">&nbsp; &nbsp;  - 시상(장기근속, 즉시시상 등)</SPAN></P>
+                                                <P><SPAN style="white-space:pre-wrap;">&nbsp; &nbsp;  - '25년 CA 소개 및 활동 계획 공유</SPAN></P>
+                                            </TD>
+                                        </TR>
+                                    </TBODY>
+                                </TABLE>
+                                <TABLE style="border-collapse:collapse;" class="cui-div">
+                                    <COLGROUP><COL/></COLGROUP>
+                                    <TBODY>
+                                        <TR>
+                                            <TD class="cui-div-cell" style="background-color:rgb(219, 219, 219);height:1px;border:0px none rgb(0, 0, 0);margin-left:0px;margin-bottom:32px;margin-right:0px;margin-top:32px;">
+                                            </TD>
+                                        </TR>
+                                    </TBODY>
+                                </TABLE>
+                                <H2 style="font-size:16px;color:rgba(0, 0, 0, 0.9);margin-left:0;margin-bottom:20px;margin-right:0px;margin-top:0px;padding-left:0px;padding-bottom:0px;padding-right:0px;padding-top:0px;">접속 가능 디바이스 • Connectable Device</H2>
+                                <TABLE style="border-collapse:collapse;" class="cui-div">
+                                    <COLGROUP><COL/></COLGROUP>
+                                    <TBODY>
+                                        <TR>
+                                            <TD class="cui-div-cell" style="margin-bottom:20px;color:rgba(0, 0, 0, 0.6);border:0px none rgba(0, 0, 0, 0.6);">
+                                                <P style="line-height:21px;margin-left:0;margin-bottom:0;margin-right:0;margin-top:0;">처음 입장하는 경우, 프로그램을 <A style="color:#2a82f0;text-decoration:underline;" href="https://meeting.samsung.net/#/install-guide">사전 설치</A>하면 빠른 입장이 가능합니다.</P>
+                                                <P style="line-height:21px;margin-left:0;margin-bottom:0;margin-right:0;margin-top:0;">If you’re new to Knox Meeting, make your join easy with <A style="color:#2a82f0;text-decoration:underline;" href="https://meeting.samsung.net/#/install-guide">pre-installation</A>.</P>
+                                            </TD>
+                                        </TR>
+                                    </TBODY>
+                                </TABLE>
+                                <TABLE class="cui-real-table" style="border:none;width:100%;border-collapse:collapse;margin-left:0px;margin-bottom:20px;margin-right:0px;margin-top:0px;padding-left:0px;padding-bottom:0px;padding-right:0px;padding-top:0px;">
+                                    <COLGROUP><COL style="width:146.435px;"/><COL/></COLGROUP>
+                                    <TBODY>
+                                        <TR style="position:relative;">
+                                            <TH style="border:none;line-height:26px;color:rgba(0, 0, 0, 0.6);font-size:14px;text-align:left;margin-left:0;margin-bottom:0;margin-right:0;margin-top:0;padding-left:5px;padding-bottom:0;padding-right:5px;padding-top:0;">
+                                                <P>PC<A href="#"><IMG data-cui-image="true" unselectable="on" title="사내망: 삼성 관계사 사업장 내부 또는 원격업무시스템 (VDI/RBS/SVPN)에서 접속할 수 있는 권한입니다.
+외부망: 외부(공인) 인터넷망에서 접속할 수 있는 권한입니다.
+Internal network: Authority to access from inside Samsung affiliates or from remote business systems (VDI/RBS/SVPN).
+External network: Authority to access from an external (public) internet network" style="vertical-align:text-bottom;margin-left:4px;cursor:pointer;border-width:0px;" src="https://meeting.samsung.net/statics/images/mail/ic_popup_q_n.png"/></A></P>
+                                            </TH>
+                                            <TD class="cui-real-td" style="border:none;line-height:26px;color:rgba(0, 0, 0, 0.9);font-size:14px;margin-left:0;margin-bottom:0;margin-right:0;margin-top:0;padding-left:5px;padding-bottom:0;padding-right:5px;padding-top:0;">
+                                                <P>사내망+외부망 • Internal+external network</P>
+                                            </TD>
+                                        </TR>
+                                        <TR style="position:relative;">
+                                            <TH style="border:none;line-height:26px;color:rgba(0, 0, 0, 0.6);font-size:14px;text-align:left;margin-left:0;margin-bottom:0;margin-right:0;margin-top:0;padding-left:5px;padding-bottom:0;padding-right:5px;padding-top:0;">
+                                                <P>Mobile<A href="#"><IMG data-cui-image="true" unselectable="on" title="사내망: 삼성 관계사의 u-Rready Wi-Fi 네트워크를 통해 접속할 수 있는 권한입니다.
+외부망: 통신사의 LTE/5G/Wi-Fi 네트워크를 통해 접속할 수 있는 권한입니다.
+Internal network: Authority to access through the u-Rready Wi-Fi network of Samsung affiliates
+External network: Authority to access through the carrier's LTE/5G/Wi-Fi network" style="vertical-align:text-bottom;margin-left:4px;cursor:pointer;border-width:0px;" src="https://meeting.samsung.net/statics/images/mail/ic_popup_q_n.png"/></A></P>
+                                            </TH>
+                                            <TD class="cui-real-td" style="border:none;line-height:26px;color:rgba(0, 0, 0, 0.9);font-size:14px;margin-left:0;margin-bottom:0;margin-right:0;margin-top:0;padding-left:5px;padding-bottom:0;padding-right:5px;padding-top:0;">
+                                                <P>사내망+외부망 • Internal+external network</P>
+                                            </TD>
+                                        </TR>
+                                    </TBODY>
+                                </TABLE>
+                                <TABLE style="border-collapse:collapse;" class="cui-div">
+                                    <COLGROUP><COL/></COLGROUP>
+                                    <TBODY>
+                                        <TR>
+                                            <TD class="cui-div-cell" style="background-color:rgb(250, 250, 250);border-radius:8px;margin-bottom:32px;border:0px none rgb(0, 0, 0);padding-left:24px;padding-bottom:16px;padding-right:24px;padding-top:16px;">
+                                                <TABLE style="border-collapse:collapse;" class="cui-div">
+                                                    <COLGROUP><COL/></COLGROUP>
+                                                    <TBODY>
+                                                        <TR>
+                                                            <TD class="cui-div-cell" style="position:relative;color:rgba(0, 0, 0, 0.6);margin-bottom:8px;border:0px none rgba(0, 0, 0, 0.6);">
+                                                                <P style="color:#ff0000;line-height:21px;margin-left:0;margin-bottom:0;margin-right:0;margin-top:0;"><SPAN style="font-weight:bold;">※&nbsp;</SPAN>본 메일을 포워딩하지 마세요.</P>
+                                                                <P style="line-height:21px;margin-left:0;margin-bottom:0;margin-right:0;margin-top:0;"><SPAN style="font-weight:bold;">※&nbsp;</SPAN>본 회의는 녹화될 수 있습니다.</P>
+                                                            </TD>
+                                                        </TR>
+                                                    </TBODY>
+                                                </TABLE>
+                                                <TABLE style="border-collapse:collapse;" class="cui-div">
+                                                    <COLGROUP><COL/></COLGROUP>
+                                                    <TBODY>
+                                                        <TR>
+                                                            <TD class="cui-div-cell" style="position:relative;color:rgba(0, 0, 0, 0.6);margin-bottom:8px;border:0px none rgba(0, 0, 0, 0.6);">
+                                                                <P style="color:#ff0000;line-height:21px;margin-left:0;margin-bottom:0;margin-right:0;margin-top:0;"><SPAN style="font-weight:bold;">※&nbsp;</SPAN>Do not forward this mail.</P>
+                                                                <P style="line-height:21px;margin-left:0;margin-bottom:0;margin-right:0;margin-top:0;"><SPAN style="font-weight:bold;">※&nbsp;</SPAN>This meeting may be recorded.</P>
+                                                            </TD>
+                                                        </TR>
+                                                    </TBODY>
+                                                </TABLE>
+                                            </TD>
+                                        </TR>
+                                    </TBODY>
+                                </TABLE>
+                            </TD>
+                        </TR>
+                    </TBODY>
+                </TABLE>
+                <P style="font-size:12px;background-color:#f0f1f5;color:#919699;padding-left:20px;height:38px;line-height:38px;">Copyright 2025 SAMSUNG SDS. All rights reserved.</P>
+            </TD>
+        </TR>
+    </TBODY>
+</TABLE>
+<TABLE style="border-collapse:collapse;" class="cui-real-table" namo_lock="namo_lock" data-cui-lock="true" id="bannersignimg">
+    <COLGROUP><COL/></COLGROUP>
+    <TBODY>
+        <TR>
+            <TD style="border:0px none rgb(0, 0, 0);" class="cui-real-td">
+                <P>&nbsp;</P>
+            </TD>
+        </TR>
+    </TBODY>
+</TABLE>
+<TABLE style="border-collapse:collapse;" class="cui-real-table" namo_lock="namo_lock" data-cui-lock="true" id="confidentialsignimg">
+    <COLGROUP><COL/></COLGROUP>
+    <TBODY>
+        <TR>
+            <TD style="border:0px none rgb(0, 0, 0);" class="cui-real-td">
+                <P><IMG src="http://kor1.samsung.net/mail/rest/v1/files/image/download/%EC%A0%9C%EB%AA%A9+%EC%97%86%EB%8A%94+%EC%B2%A8%EB%B6%80+%ED%8C%8C%EC%9D%BC+31420_0.png?1=1&amp;filepath=/SHARED/TEMP/ML/image/m/20250307/1_22647_cafe_image_0@s-core.co.kr_0_meeting.info&amp;user=meeting.info&amp;partno=0&amp;folderId=1&amp;seqid=22647&amp;contentType=image%2Fpng" style="display:inline-block;border:0px solid;width:520px;height:144px;" data-cui-image="true" unselectable="on"/><BR/></P>
+            </TD>
+        </TR>
+    </TBODY>
+</TABLE>
+<P><BR/></P>
